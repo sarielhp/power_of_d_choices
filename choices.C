@@ -17,120 +17,6 @@ std::mt19937 rand_generator;
 
 /*--- Constants ---*/
 
-class  IntTable1d
-{
-public:
-    std::vector<int>  row;
-
-    void  add_cols_if_needed( int  cols ) {
-        while   ( (int)row.size() <= cols )
-            row.push_back( 0 );
-    }
-    void  set( int  c, int val ) {
-        assert( c >= 0 );
-        assert( (int)row.size() > c );
-        row[ c ] = val;
-    }
-    int  get( int  c) {
-        if  ( ( c < 0 ) || ( c >= (int)row.size() ) )
-            return  0;
-        return  row[ c ];
-    }
-};
-
-class  IntTable2d
-{
-private:
-    std::vector<IntTable1d>  rows;
-    int   rows_n, cols_n;
-
-public:
-    IntTable2d() {
-        rows_n = cols_n = 0;
-    }
-    void  init( int  _rows, int   _cols ) {
-        rows_n = _rows;
-        cols_n = _cols;
-    }
-
-    int  get( int r, int  c) {
-        if  ( ( r < 0 ) || ( r >= (int)rows.size() ) )
-            return  0;
-        IntTable1d  &row( rows[ r ] );
-        return  row.get( c );
-    }
-
-
-
-    void  add_rows_if_needed( int  rw ) {
-        while  ( rw >= (int)rows.size() ) {
-            IntTable1d itb;
-            rows.push_back( itb );
-        }
-        if  ( rw >= rows_n )
-            rows_n = rw + 1;
-    }
-
-    void   resize_on_need( int  r, int  c )
-    {
-        add_rows_if_needed( r );
-        rows[ r ].add_cols_if_needed( c );
-        if  ( c >= cols_n )
-            cols_n = c + 1;
-    }
-
-    void  set( int   r, int  c, int  val ) {
-        resize_on_need( r, c );
-        rows[ r ].set( c, val );
-    }
-
-    void   dump_latex() {
-        for  ( int  r = 0; r < (int)rows.size(); r++ ) {
-            IntTable1d  & itd( rows[ r ] );
-            for  ( int  c = 0; c < (int)itd.row.size(); c++ ) {
-                if  ( c > 0 )
-                    printf(  "&" );
-                printf( "%'d ", itd.row[ c ] );
-            }
-            printf( "\\\\\n" );
-        }
-    }
-
-    void  dump_latex_to_file( const char  * filename ) {
-        FILE  * fl;
-
-        fl = fopen( filename, "wt" );
-        assert( fl != NULL );
-
-        fprintf( fl, "\\begin{tabular}{|" );
-        for  ( int  ind = 0; ind <= cols_n; ind++ )
-            fprintf( fl, "c|" );
-        fprintf( fl, "}\n" );
-        printf( "cols_n: %d\n", cols_n );
-        printf( "rows_n: %d\n", rows_n );
-        for  ( int  r = 0; r < rows_n; r++ ) {
-            fprintf( fl, "  %d &", r );
-            for  ( int  c = 0; c < cols_n; c++ )  {
-                if  ( c > 0 )
-                    fprintf( fl, " & " );
-                int  num = get( r, c );
-                if  ( num != 0 )
-                    fprintf( fl, "%'12d ", num );
-                else
-                    fprintf( fl, "%12s ", "" );
-            }
-            fprintf( fl, "\\\\\n" );
-        }
-        fprintf( fl, "\\end{tabular}\n\n\n" );
-
-        fclose( fl );
-
-    }
-
-};
-
-
-
 class  IntDistrib
 {
 private:
@@ -188,14 +74,6 @@ public:
         printf( "%% LATEX \n" );
         printf( "-------------------------------------------------\n" );
     }
-
-    void  store_in_col( IntTable2d &tbl, int  col ) {
-        int  mx = max_val();
-
-        for  ( int  ind = 0; ind <= mx; ind++ )
-            tbl.set( ind, col, dist[ ind ] );
-    }
-
 };
 
 class  BinTable
@@ -228,7 +106,6 @@ public:
         }
         return  0;
     }
-
 
     void  insert_random_reg() {
         int  pos = rand_generator() % n;
@@ -270,7 +147,6 @@ public:
         }
         bins[ min_pos ]++;
     }
-
 
     void  insert_random_d_choices_always_left( int  d ) {
         int  ps[ d ], delta;
@@ -377,9 +253,7 @@ public:
 
         collect_distr( distr );
     }
-
 };
-
 
 void  usage()
 {
@@ -424,7 +298,6 @@ int  main( int  argc, char  ** argv )
 
     IntDistrib  distr, distr_d;
     BinTable  bt_reg, bt;
-    IntTable2d  table;
 
     n = 1000000000;
 
