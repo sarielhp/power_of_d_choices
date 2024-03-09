@@ -10,9 +10,8 @@ The code was written for linux, but should compile with g++ under any
 other reasonable (but naturally inferior) operating system. To build,
 just issue `make` from the command line.
 
-Code written by Sariel Har-Peled. All bugs are the fault of somebody
-else.
-
 Usage:
 
 `./choices 1000000 2`
+
+Code written by Sariel Har-Peled. All bugs are the fault of somebody else.
