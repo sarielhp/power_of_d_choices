@@ -1,6 +1,7 @@
 /*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
- * hash_games.C -
+ * choices.C -
  *
+ * Code written and copyrighted by Sariel Har-Peled.
 \*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*/
 
 #include  <stdlib.h>
@@ -57,23 +58,6 @@ public:
         printf( "-------------------------------------------------\n" );
     }
 
-    void  dump( int  n, int  d ) {
-        int  mx = max_val();
-
-        printf( "-------------------------------------------------\n" );
-        for  ( int  ind = 0; ind <= mx; ind++ )
-            printf( "%3d | %'12d\n", ind, dist[ ind ] );
-        printf( "-------------------------------------------------\n" );
-
-        printf( "%'d & %d &", n, d );
-        for  ( int  ind = 0; ind <= mx; ind++ ) {
-            if  ( ind > 0 )
-                printf( "&" );
-            printf( " %'d ", dist[ ind ] );
-        }
-        printf( "%% LATEX \n" );
-        printf( "-------------------------------------------------\n" );
-    }
 };
 
 class  BinTable
@@ -91,7 +75,7 @@ public:
         n = _n;
         bins.resize( n );
         for  ( int  ind = 0; ind < n; ind++ )
-            bins[ ind ] = 0;;
+            bins[ ind ] = 0;
     }
 
     int  insert_random_reg_trailing(  int  d ) {
@@ -210,8 +194,6 @@ public:
         collect_distr( distr );
     }
 
-
-    // Simulate d choices...
     void   simulate_d_choices( int   _n, int  _d, IntDistrib  & distr ) {
         init( _n );
 
@@ -221,14 +203,12 @@ public:
         collect_distr( distr );
     }
 
-    void   simulate_streamed_d_choices( int   _n,
-                                           int  _d,
-                                           IntDistrib  & distr ) {
+    void   simulate_streamed_d_choices( int   _n, int  _d,
+                                        IntDistrib  & distr ) {
         int  c_pos;
         init( _n );
         std::vector<int>  choices;
 
-        //fill_choices( choices, _d );
         for   ( int  ind  = 0; ind < _d; ind++ ) {
             choices.push_back( rand_generator() % n );
         }
@@ -369,4 +349,4 @@ int  main( int  argc, char  ** argv )
     return  0;
 }
 
-/* hash_games.C - End of File ------------------------------------------*/
+/* choice.C - End of File ------------------------------------------*/
